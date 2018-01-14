@@ -1,0 +1,176 @@
+homeassistant:
+  name: Home
+  latitude: !secret home_lat
+  longitude: !secret home_lon
+  # Impacts weather/sunrise data (altitude above sea level in meters)
+  elevation: !secret home_elevation
+  unit_system: imperial
+  time_zone: America/Chicago
+#  customize: !include customize.yaml
+
+logger:
+  default: info
+
+# Show links to resources in log and frontend
+# introduction:
+
+# Enables the frontend
+frontend:
+
+# Enables configuration UI
+config:
+
+http:
+  api_password: !secret http_api_password
+  base_url: !secret base_url
+  ssl_certificate: !secret ssl_certificate
+  ssl_key: !secret ssl_key
+  ip_ban_enabled: True
+  login_attempts_threshold: 5
+
+# Checks for available updates
+# Note: This component will send some information about your system to
+# the developers to assist with development of Home Assistant.
+# For more information, please see:
+# https://home-assistant.io/blog/2016/10/25/explaining-the-updater/
+updater:
+  # Optional, allows Home Assistant developers to focus on popular components.
+  # include_used_components: true
+
+# Discover some devices automatically
+discovery:
+
+# Allows you to issue voice commands from the frontend in enabled browsers
+conversation:
+
+# Enables support for tracking state changes over time
+history:
+
+# View all events in a logbook
+logbook:
+
+# Track the sun
+sun:
+
+recorder:
+  exclude:
+    entities:
+      - sun.sun
+
+# Text to speech
+tts:
+  - platform: google
+
+mqtt:
+  broker: 192.168.1.183 
+  port: 8883
+  client_id: hass
+  username: !secret mqtt_username
+  password: !secret mqtt_password
+  certificate: !secret mqtt_certificate
+  tls_insecure: !secret mqtt_tls_insecure
+  birth_message:
+    topic: 'hass/status'
+    payload: 'online'
+    qos: 1
+    retain: true
+  will_message:
+    topic: 'hass/status'
+    payload: 'offline'
+    qos: 1
+    retain: true
+
+device_tracker:
+  - platform: owntracks
+
+switch:
+  - platform: mqtt
+    name: Living Room Outlet 1
+    friendy_name: Living Room Outlet 1
+    state_topic: '/home/floor/1/livingroom/outlets/1'
+    command_topic: '/home/floor/1/livingroom/outlets/1'
+    payload_on: 1
+    payload_off: 0
+    retain: true
+
+  - platform: mqtt
+    name: Living Room Outlet 2
+    friendy_name: Living Room Outlet 2
+    state_topic: '/home/floor/1/livingroom/outlets/2'
+    command_topic: '/home/floor/1/livingroom/outlets/2'
+    payload_on: 1
+    payload_off: 0
+    retain: true
+
+  - platform: mqtt
+    name: Living Room Outlet 3
+    friendy_name: Living Room Outlet 3
+    state_topic: '/home/floor/1/livingroom/outlets/3'
+    command_topic: '/home/floor/1/livingroom/outlets/3'
+    payload_on: 1
+    payload_off: 0
+    retain: true
+
+  - platform: mqtt
+    name: Living Room Outlet 4
+    friendy_name: Living Room Outlet 4
+    state_topic: '/home/floor/1/livingroom/outlets/4'
+    command_topic: '/home/floor/1/livingroom/outlets/4'
+    payload_on: 1
+    payload_off: 0
+    retain: true
+
+# Weather prediction
+sensor:
+  - platform: darksky
+    api_key: !secret darksky_api_key
+    update_interval:
+      minutes: 5
+    monitored_conditions:
+      - summary
+      - temperature
+      - wind_speed
+      - humidity
+      - pressure
+
+sensor floor_1_lr_env_temp:
+  - platform: mqtt
+    name: Living Room Temp
+    state_topic: '/home/floor/1/livingroom/env/temp'
+    unit_of_measurement: '°F'
+    value_template: '{{ float(value) }}'
+#    scan_interval: 20
+    force_update: true
+
+sensor floor_1_lr_env_humid:
+  - platform: mqtt
+    name: Living Room Relative Humidity
+    state_topic: '/home/floor/1/livingroom/env/humid'
+    unit_of_measurement: '%'
+    value_template: '{{ float(value) }}'
+#    scan_interval: 20
+    force_update: true
+  
+sensor dht22_1_env_temp:
+  - platform: mqtt
+    name: DHT22_1 Temp
+    state_topic: '/sensor/dht22_1/env/temp'
+    unit_of_measurement: '°F'
+    value_template: '{{ float(value) }}'
+#    scan_interval: 20
+    force_update: true
+
+sensor dht22_1_env_humid:
+  - platform: mqtt
+    name: DHT22_1 Relative Humidity
+    state_topic: '/sensor/dht22_1/env/humid'
+    unit_of_measurement: '%'
+    value_template: '{{ float(value) }}'
+#    scan_interval: 20
+    force_update: true
+  
+#duckdns: !include duckdns.yaml
+group: !include groups.yaml
+automation: !include_dir_list automations
+script: !include scripts.yaml
+zone: !include zones.yaml
