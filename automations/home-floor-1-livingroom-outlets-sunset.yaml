@@ -13,4 +13,8 @@ action:
       topic: "/home/floor/1/livingroom/outlets/3"
       payload: "1"
       retain: true
-
+  - service: mqtt.publish
+    data:
+      topic: "/home/floor/1/livingroom/outlets/4"
+      payload: "1"
+      retain: true

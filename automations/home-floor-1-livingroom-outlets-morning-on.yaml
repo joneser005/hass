@@ -1,7 +1,7 @@
-alias: Livingroom lights on at sunset
+alias: Livingroom lights on before sunrise
 trigger:
   platform: sun
-  event: sunset
+  event: sunrise
   offset: "-01:15:00"
 action:
   - service: mqtt.publish
@@ -14,4 +14,8 @@ action:
       topic: "/home/floor/1/livingroom/outlets/3"
       payload: "1"
       retain: true
-
+  - service: mqtt.publish
+    data:
+      topic: "/home/floor/1/livingroom/outlets/4"
+      payload: "1"
+      retain: true
